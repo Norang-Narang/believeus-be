@@ -8,6 +8,7 @@ import com.example.believeus.caregiver.repository.CaregiverRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +17,7 @@ public class CaregiverService {
 
     private final CaregiverRepository caregiverRepository;
     private final CaregiverCertificateRepository caregiverCertificateRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public void signUp(@Valid CaregiverSignupRequest request) {
         validateRequest(request);       // 검증 로직 먼저 실행
@@ -25,17 +27,34 @@ public class CaregiverService {
 
     private void validateRequest(CaregiverSignupRequest request) {
         // 필수 필드 검증
+        if (request.getUsername() == null || request.getUsername().isBlank()) {
+            throw new IllegalArgumentException("아이디는 필수 입력 항목입니다.");
+        }
+        if (request.getPassword() == null || request.getPassword().isBlank()) {
+            throw new IllegalArgumentException("비밀번호는 필수 입력 항목입니다.");
+        }
+        if (!request.getPassword().equals(request.getPasswordConfirm())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
         if (request.getName() == null || request.getName().isBlank()) {
             throw new IllegalArgumentException("이름은 필수 입력 항목입니다.");
         }
         if (request.getPhoneNumber() == null || request.getPhoneNumber().isBlank()) {
             throw new IllegalArgumentException("전화번호는 필수 입력 항목입니다.");
         }
+
+        if (caregiverRepository.existsByUsername(request.getUsername())) {
+            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+        }
     }
 
     @Transactional
     public void saveCaregiverWithCertificates(CaregiverSignupRequest request) {
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
         Caregiver caregiver = Caregiver.builder()
+                .username(request.getUsername())
+                .password(encodedPassword)
                 .name(request.getName())
                 .phoneNumber(request.getPhoneNumber())
                 .hasVehicle(request.isHasVehicle())
