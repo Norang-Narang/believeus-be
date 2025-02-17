@@ -30,6 +30,7 @@ public class CaregiverController {
     @PostMapping("/signup")
     public ResponseEntity<String> signUp(@Valid @RequestBody CaregiverSignupRequest request) {
         caregiverService.signUp(request);
-        return ResponseEntity.ok("회원가입이 완료되었습니다.");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("회원가입이 완료되었습니다.");
     }
 }
