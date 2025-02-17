@@ -35,4 +35,12 @@ public class CaregiverSignupRequest {
     private String majorExperience;         // 주요 경력
     private String introduction;            // 한 줄 소개
     private String profileImageUrl;         // 프로필 사진 url
+
+    private List<CertificateRequest> certificates;      // 자격증 리스트
+
+    @Getter
+    public static class CertificateRequest {
+        private CertificateType certificateType;
+        private String certificateNumber;
+    }
 }
