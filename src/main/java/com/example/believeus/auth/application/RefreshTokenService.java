@@ -50,7 +50,8 @@ public class RefreshTokenService {
 
     // 리프레시 토큰 삭제 (로그아웃)
     @Transactional
-    public void deleteByUsername(String username) {
-        refreshTokenRepository.deleteByUsername(username);
+    public void deleteByRefreshToken(String refreshToken) {
+        refreshTokenRepository.findByToken(refreshToken)
+                .ifPresent(rt -> refreshTokenRepository.deleteByUsername(rt.getUsername()));
     }
 }
