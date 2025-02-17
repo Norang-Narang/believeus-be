@@ -26,13 +26,18 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "로그인 성공"),
             @ApiResponse(responseCode = "403", description = "인증 실패"),
     })
-
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         LoginResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Access Token 갱신", description = "만료된 Access Token을 Refresh Token을 이용해 갱신하는 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "새로운 Access Token 발급 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "403", description = "유효하지 않거나 만료된 Refresh Token")
+    })
     @PostMapping("/refresh")
     public ResponseEntity<LoginResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
         return refreshTokenService.verifyToken(request.getRefreshToken())
