@@ -51,6 +51,12 @@ public class AuthController {
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않거나 만료된 리프레시 토큰입니다."));
     }
 
+    @Operation(summary = "로그아웃", description = "사용자의 Refresh Token을 무효화하여 로그아웃하는 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "403", description = "유효하지 않거나 만료된 Refresh Token")
+    })
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestBody RefreshTokenRequest request) {
         refreshTokenService.deleteByRefreshToken(request.getRefreshToken());
