@@ -1,6 +1,7 @@
 package com.example.believeus.caregiver.dto;
 
 import com.example.believeus.caregiver.domain.CertificateType;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -13,6 +14,15 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class CaregiverSignupRequest {
+    @NotBlank
+    private String username;
+
+    @NotBlank
+    private String password;
+
+    @NotBlank
+    private String passwordConfirm;
+
     @NotBlank(message = "이름은 필수 입력 항목입니다.")
     private String name;
 
@@ -36,11 +46,14 @@ public class CaregiverSignupRequest {
     private String introduction;            // 한 줄 소개
     private String profileImageUrl;         // 프로필 사진 url
 
+    @Valid
     private List<CertificateRequest> certificates;      // 자격증 리스트
 
     @Getter
     public static class CertificateRequest {
         private CertificateType certificateType;
+
+        @NotBlank(message = "자격증 번호는 필수 입력 항목입니다.")
         private String certificateNumber;
     }
 }

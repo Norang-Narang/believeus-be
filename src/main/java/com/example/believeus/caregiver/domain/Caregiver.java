@@ -14,6 +14,12 @@ public class Caregiver {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 50, unique = true)
+    private String username;            // 사용자 ID
+
+    @Column(nullable = false)
+    private String password;            // 사용자 password
+
     @Column(nullable = false, length = 50)
     private String name;
 
@@ -33,8 +39,10 @@ public class Caregiver {
     private List<CaregiverCertificate> certificates = new ArrayList<>();
 
     @Builder
-    public Caregiver(String name, String phoneNumber, boolean hasVehicle, boolean hasDementiaTraining,
+    public Caregiver(String username, String password, String name, String phoneNumber, boolean hasVehicle, boolean hasDementiaTraining,
                      String experienceYears, String majorExperience, String introduction, String profileImageUrl) {
+        this.username = username;
+        this.password = password;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.hasVehicle = hasVehicle;
