@@ -35,4 +35,9 @@ public class AuthService {
 
         return new LoginResponse(accessToken, refreshToken.getToken());
     }
+
+    // Access Token 생성 메서드
+    public String generateAccessToken(String username) {
+        return jwtTokenProvider.generateAccessToken(username);
+    }
 }
