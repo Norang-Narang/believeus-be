@@ -1,6 +1,7 @@
 package com.example.believeus.auth.application;
 
 import com.example.believeus.auth.JwtTokenProvider;
+import com.example.believeus.auth.domain.RefreshToken;
 import com.example.believeus.auth.dto.LoginRequest;
 import com.example.believeus.auth.dto.LoginResponse;
 import com.example.believeus.caregiver.domain.Caregiver;
@@ -16,6 +17,7 @@ public class AuthService {
     private final CaregiverRepository caregiverRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenService refreshTokenService;
 
     public LoginResponse login(LoginRequest request) {
         // 유저 조회
@@ -29,8 +31,13 @@ public class AuthService {
 
         // JWT 토큰 생성
         String accessToken = jwtTokenProvider.generateAccessToken(caregiver.getUsername());
-        String refreshToken = jwtTokenProvider.generateRefreshToken(caregiver.getUsername());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(caregiver.getUsername());
 
-        return new LoginResponse(accessToken, refreshToken);
+        return new LoginResponse(accessToken, refreshToken.getToken());
+    }
+
+    // Access Token 생성 메서드
+    public String generateAccessToken(String username) {
+        return jwtTokenProvider.generateAccessToken(username);
     }
 }
