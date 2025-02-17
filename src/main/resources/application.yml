@@ -25,3 +25,7 @@ spring:
       org.hibernate.SQL: DEBUG
       org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
+jwt:
+  secret: 'mySecretKeymySecretKeymySecretKeymySecretKey'
+  access-token-expiration: 3600000
+  refresh-token-expiration: 86400000
