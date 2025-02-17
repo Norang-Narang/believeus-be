@@ -44,4 +44,10 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/springboot-api:latest
             docker stop springboot-api || true
             docker rm springboot-api || true
-            docker run -d --name springboot-api -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/springboot-api:latest
+            docker run -d --name springboot-api -p 8080:8080 \
+              -e DB_HOST=${{ secrets.DB_HOST }} \
+              -e DB_PORT=${{ secrets.DB_PORT }} \
+              -e DB_NAME=${{ secrets.DB_NAME }} \
+              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              ${{ secrets.DOCKERHUB_USERNAME }}/springboot-api:latest
