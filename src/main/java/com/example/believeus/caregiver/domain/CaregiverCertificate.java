@@ -29,9 +29,10 @@ public class CaregiverCertificate {
     private Caregiver caregiver; // 요양보호사 FK
 
     @Builder
-    public CaregiverCertificate(CertificateType certificateType, String certificateNumber) {
+    public CaregiverCertificate(CertificateType certificateType, String certificateNumber, Caregiver caregiver) {
         this.certificateType = certificateType;
         this.certificateNumber = certificateNumber;
+        this.caregiver = caregiver;
     }
 
     public void setCaregiver(Caregiver caregiver) {
