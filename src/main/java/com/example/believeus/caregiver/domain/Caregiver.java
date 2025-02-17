@@ -17,7 +17,7 @@ public class Caregiver {
     @Column(nullable = false, length = 50, unique = true)
     private String username;            // 사용자 ID
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 72)  // BCrypt generates 60 character hashes
     private String password;            // 사용자 password
 
     @Column(nullable = false, length = 50)
