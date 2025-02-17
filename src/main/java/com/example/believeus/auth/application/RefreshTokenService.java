@@ -6,11 +6,13 @@ import com.example.believeus.auth.repository.RefreshTokenRepository;
 import com.example.believeus.caregiver.repository.CaregiverRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
@@ -38,7 +40,12 @@ public class RefreshTokenService {
     // 리프레시 토큰 검증
     public Optional<RefreshToken> verifyToken(String token) {
         return refreshTokenRepository.findByToken(token)
-                .filter(rt -> rt.getExpiryDate().isAfter(Instant.now()));
+                .map(rt -> {
+                    if (rt.getExpiryDate().isBefore(Instant.now().minusSeconds(1))) {
+                        return null;
+                    }
+                    return rt;
+                });
     }
 
     // 리프레시 토큰 삭제 (로그아웃)
