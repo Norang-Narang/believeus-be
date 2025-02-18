@@ -52,4 +52,8 @@ public class Senior {
         this.address = address;
         this.careNeeds = careNeeds;
     }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
 }
