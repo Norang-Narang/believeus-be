@@ -29,15 +29,17 @@ public class AuthService {
 
         // 요양보호사 로그인 로직
         if (caregiver.isPresent() && passwordEncoder.matches(request.getPassword(), caregiver.get().getPassword())) {
-            String accessToken = jwtTokenProvider.generateAccessToken(caregiver.get().getUsername(), "ROLE_CAREGIVER");
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(caregiver.get().getUsername());
+            String role = "ROLE_CAREGIVER";
+            String accessToken = jwtTokenProvider.generateAccessToken(caregiver.get().getUsername(), role);
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(caregiver.get().getUsername(), role);
             return new LoginResponse(accessToken, refreshToken.getToken());
         }
 
         // 관리자 로그인 로직
         if (admin.isPresent() && passwordEncoder.matches(request.getPassword(), admin.get().getPassword())) {
-            String accessToken = jwtTokenProvider.generateAccessToken(admin.get().getUsername(), "ROLE_ADMIN");
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(admin.get().getUsername());
+            String role = "ROLE_ADMIN";
+            String accessToken = jwtTokenProvider.generateAccessToken(admin.get().getUsername(), role);
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(admin.get().getUsername(), role);
             return new LoginResponse(accessToken, refreshToken.getToken());
         }
 

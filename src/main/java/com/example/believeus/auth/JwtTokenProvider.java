@@ -43,8 +43,8 @@ public class JwtTokenProvider {
     }
 
     // Refresh Token 생성
-    public String generateRefreshToken(String username) {
-        return generateToken(username, "ROLE_USER", refreshTokenExpiration);
+    public String generateRefreshToken(String username, String role) {
+        return generateToken(username, role, refreshTokenExpiration);
     }
 
     // 토큰 검증 메서드
