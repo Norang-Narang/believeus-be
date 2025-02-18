@@ -5,6 +5,7 @@ import com.example.believeus.senior.dto.SeniorRequestDTO;
 import com.example.believeus.senior.application.SeniorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,6 +15,7 @@ public class SeniorController {
     private final SeniorService seniorService;
 
     @PostMapping("/register")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Senior> registerSenior(@RequestBody SeniorRequestDTO request) {
         Senior senior = seniorService.registerSenior(request);
         return ResponseEntity.ok(senior);
