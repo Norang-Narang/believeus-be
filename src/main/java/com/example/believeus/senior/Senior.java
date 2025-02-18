@@ -17,7 +17,8 @@ import java.time.LocalDate;
 @EntityListeners(AuditingEntityListener.class)
 public class Senior {
     @Id
-    @Comment("노인 ID") private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Comment("노인 ID") private Long id;
     @Comment("노인 이름") private String name;
     @Comment("생년월일") private LocalDate birthDate;
     public enum Gender {
@@ -44,16 +45,13 @@ public class Senior {
     private Admin admin;
 
     @Builder
-    public Senior(String name, LocalDate birthDate, Gender gender, CareGrade careGrade, String address, String careNeeds) {
+    public Senior(String name, LocalDate birthDate, Gender gender, CareGrade careGrade, String address, String careNeeds, Admin admin) {
         this.name = name;
         this.birthDate = birthDate;
         this.gender = gender;
         this.careGrade = careGrade;
         this.address = address;
         this.careNeeds = careNeeds;
-    }
-
-    public void setAdmin(Admin admin) {
         this.admin = admin;
     }
 }

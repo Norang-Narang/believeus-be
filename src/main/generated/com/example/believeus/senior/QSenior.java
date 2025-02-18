@@ -36,7 +36,7 @@ public class QSenior extends EntityPathBase<Senior> {
 
     public final EnumPath<Senior.Gender> gender = createEnum("gender", Senior.Gender.class);
 
-    public final NumberPath<Integer> id = createNumber("id", Integer.class);
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath name = createString("name");
 
