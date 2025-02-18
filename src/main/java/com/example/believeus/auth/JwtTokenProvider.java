@@ -1,11 +1,6 @@
 package com.example.believeus.auth;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,27 +26,28 @@ public class JwtTokenProvider {
         this.refreshTokenExpiration = refreshTokenExpiration;
     }
 
-    // JWT 토큰 생성
-    public String generateToken(String username, long expiration) {
+    // 공통적인 토큰 생성 메서드
+    private String generateToken(String username, String role, long expiration) {
         return Jwts.builder()
                 .subject(username)
+                .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key)
                 .compact();
     }
 
-    // 액세스 토큰 생성
-    public String generateAccessToken(String username) {
-        return generateToken(username, accessTokenExpiration);
+    // Access Token 생성
+    public String generateAccessToken(String username, String role) {
+        return generateToken(username, role, accessTokenExpiration);
     }
 
-    // 리프레시 토큰 생성
+    // Refresh Token 생성
     public String generateRefreshToken(String username) {
-        return generateToken(username, refreshTokenExpiration);
+        return generateToken(username, "ROLE_USER", refreshTokenExpiration);
     }
 
-    // 토큰 검증
+    // 토큰 검증 메서드
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
@@ -73,14 +69,14 @@ public class JwtTokenProvider {
         return false;
     }
 
-    // 토큰에서 사용자 정보 추출
-    public String getUsernameFromToken(String token) {
+    // 역할(role) 정보 추출
+    public String getRoleFromToken(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-        return claims.getSubject();
+        return claims.get("role", String.class);
     }
 
     // 토큰에서 Claims 정보 추출
