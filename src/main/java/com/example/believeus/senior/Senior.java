@@ -25,6 +25,7 @@ public class Senior {
         MALE, // 남
         FEMALE // 여
     }
+    @Enumerated(EnumType.STRING)
     @Comment("성별") private Gender gender;
     public enum CareGrade {
         FIRST, // 1등급
