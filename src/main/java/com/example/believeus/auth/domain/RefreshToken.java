@@ -23,4 +23,14 @@ public class RefreshToken {
 
     @Column(nullable = false)
     private Instant expiryDate;     // 토큰 만료일
+
+    @Column(nullable = false)
+    private String role;
+
+    public RefreshToken(String token, String username, Instant expiryDate, String role) {
+        this.token = token;
+        this.username = username;
+        this.expiryDate = expiryDate;
+        this.role = role;
+    }
 }

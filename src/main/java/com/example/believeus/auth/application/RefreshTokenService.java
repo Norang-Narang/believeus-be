@@ -4,6 +4,7 @@ import com.example.believeus.auth.JwtTokenProvider;
 import com.example.believeus.auth.domain.RefreshToken;
 import com.example.believeus.auth.repository.RefreshTokenRepository;
 import com.example.believeus.caregiver.repository.CaregiverRepository;
+import com.example.believeus.admin.repository.AdminRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,19 +20,21 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final CaregiverRepository caregiverRepository;
+    private final AdminRepository adminRepository;
 
     @Value("${jwt.refresh-token-expiration}")
     private long refreshTokenExpiration;
 
-    // 리프레시 토큰 생성 및 저장
+    // 리프레시 토큰 생성 및 저장 (요양보호사 & 관리자)
     @Transactional
-    public RefreshToken createRefreshToken(String username) {
+    public RefreshToken createRefreshToken(String username, String role) {
         // 기존 토큰이 있으면 삭제
         refreshTokenRepository.deleteByUsername(username);
 
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUsername(username);
-        refreshToken.setToken(jwtTokenProvider.generateRefreshToken(username));
+        refreshToken.setRole(role);
+        refreshToken.setToken(jwtTokenProvider.generateRefreshToken(username, role)); 
         refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenExpiration));
 
         return refreshTokenRepository.save(refreshToken);
@@ -40,12 +43,7 @@ public class RefreshTokenService {
     // 리프레시 토큰 검증
     public Optional<RefreshToken> verifyToken(String token) {
         return refreshTokenRepository.findByToken(token)
-                .map(rt -> {
-                    if (rt.getExpiryDate().isBefore(Instant.now().minusSeconds(1))) {
-                        return null;
-                    }
-                    return rt;
-                });
+                .filter(rt -> rt.getExpiryDate().isAfter(Instant.now()));
     }
 
     // 리프레시 토큰 삭제 (로그아웃)

@@ -1,10 +1,12 @@
 package com.example.believeus.auth.controller;
 
+import com.example.believeus.admin.repository.AdminRepository;
 import com.example.believeus.auth.application.RefreshTokenService;
 import com.example.believeus.auth.dto.LoginRequest;
 import com.example.believeus.auth.dto.LoginResponse;
 import com.example.believeus.auth.application.AuthService;
 import com.example.believeus.auth.dto.RefreshTokenRequest;
+import com.example.believeus.caregiver.repository.CaregiverRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -23,6 +25,8 @@ import java.util.Map;
 public class AuthController {
     private final AuthService authService;
     private final RefreshTokenService refreshTokenService;
+    private final CaregiverRepository caregiverRepository;
+    private final AdminRepository adminRepository;
 
     @Operation(summary = "통합 로그인", description = "요양보호사/관리자 통합 로그인 API")
     @ApiResponses({
@@ -45,7 +49,8 @@ public class AuthController {
     public ResponseEntity<LoginResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
         return refreshTokenService.verifyToken(request.getRefreshToken())
                 .map(rt -> {
-                    String newAccessToken = authService.generateAccessToken(rt.getUsername());
+                    String role = authService.getUserRole(rt.getUsername());
+                    String newAccessToken = authService.generateAccessToken(rt.getUsername(), role);
                     return ResponseEntity.ok(new LoginResponse(newAccessToken, rt.getToken()));
                 })
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않거나 만료된 리프레시 토큰입니다."));
