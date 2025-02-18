@@ -17,13 +17,15 @@ import java.time.LocalDate;
 @EntityListeners(AuditingEntityListener.class)
 public class Senior {
     @Id
-    @Comment("노인 ID") private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Comment("노인 ID") private Long id;
     @Comment("노인 이름") private String name;
     @Comment("생년월일") private LocalDate birthDate;
     public enum Gender {
         MALE, // 남
         FEMALE // 여
     }
+    @Enumerated(EnumType.STRING)
     @Comment("성별") private Gender gender;
     public enum CareGrade {
         FIRST, // 1등급
@@ -37,19 +39,23 @@ public class Senior {
     @Comment("주소") private String address;
 
     @Comment("케어 필요 항목") private String careNeeds;
-    @CreatedDate @Comment("등록 일자") private LocalDate createdAt;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    @Comment("등록 일자") private LocalDate createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id") @Comment("관리자 ID")
     private Admin admin;
 
     @Builder
-    public Senior(String name, LocalDate birthDate, Gender gender, CareGrade careGrade, String address, String careNeeds) {
+    public Senior(String name, LocalDate birthDate, Gender gender, CareGrade careGrade, String address, String careNeeds, Admin admin) {
         this.name = name;
         this.birthDate = birthDate;
         this.gender = gender;
         this.careGrade = careGrade;
         this.address = address;
         this.careNeeds = careNeeds;
+        this.admin = admin;
     }
 }
