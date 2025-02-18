@@ -38,7 +38,10 @@ public class Senior {
     @Comment("주소") private String address;
 
     @Comment("케어 필요 항목") private String careNeeds;
-    @CreatedDate @Comment("등록 일자") private LocalDate createdAt;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    @Comment("등록 일자") private LocalDate createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id") @Comment("관리자 ID")
