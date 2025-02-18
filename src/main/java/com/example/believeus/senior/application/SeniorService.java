@@ -28,11 +28,10 @@ public class SeniorService {
                 .careGrade(request.getCareGrade())
                 .address(request.getAddress())
                 .careNeeds(request.getCareNeeds())
+                .admin(admin)
                 .build();
-
-        // 관리자 정보 설정
-        senior.setAdmin(admin);
 
         return seniorRepository.save(senior);
     }
 }
+
