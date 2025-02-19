@@ -2,19 +2,28 @@ package com.example.believeus.admin.application;
 
 import com.example.believeus.admin.domain.Admin;
 import com.example.believeus.admin.dto.AdminDetailsRequestDTO;
+import com.example.believeus.admin.dto.SeniorListResponse;
 import com.example.believeus.admin.repository.AdminRepository;
 import com.example.believeus.auth.domain.Role;
 import com.example.believeus.auth.domain.User;
 import com.example.believeus.auth.repository.UserRepository;
+import com.example.believeus.senior.Senior;
+import com.example.believeus.senior.repository.SeniorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AdminService {
     private final AdminRepository adminRepository;
     private final UserRepository userRepository;
+    private final SeniorRepository seniorRepository;
 
     @Transactional
     public void registerAdminDetails(AdminDetailsRequestDTO request) {
@@ -41,4 +50,20 @@ public class AdminService {
 
         adminRepository.save(admin);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<List<SeniorListResponse>> seniors() {
+        List<Senior> seniors = seniorRepository.findAll();
+
+        // Senior 객체를 SeniorListResponse로 변환
+        List<SeniorListResponse> response = seniors.stream()
+                .map(senior -> SeniorListResponse.builder()
+                        .name(senior.getName())
+                        .age(senior.getAge() + "세")
+                        .gender(senior.getGender() == Senior.Gender.MALE ? "남" : "여")
+                        .build()).collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }
