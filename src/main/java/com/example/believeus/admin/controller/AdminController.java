@@ -24,4 +24,11 @@ public class AdminController {
     public ResponseEntity<List<SeniorListResponse>> getSeniors() {
         return adminService.seniors();
     }
+
+    @Operation(summary = "개별 어르신 조회", description = "어르신의 개별정보를 가져옵니다")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/seniors/{seniorId}")
+    public ResponseEntity<SeniorListResponse> getSenior(@PathVariable Long seniorId) {
+        return adminService.senior(seniorId);
+    }
 }
