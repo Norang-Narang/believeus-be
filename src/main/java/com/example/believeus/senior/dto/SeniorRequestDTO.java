@@ -9,6 +9,8 @@ public class SeniorRequestDTO {
     private String name;
     private LocalDate birthDate;
     private Senior.Gender gender;
+    private int height;
+    private int weight;
     private Senior.CareGrade careGrade;
     private String address;
     private String careNeeds;
