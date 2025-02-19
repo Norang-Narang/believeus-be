@@ -1,5 +1,6 @@
 package com.example.believeus.common.exception;
 
+import com.example.believeus.common.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -27,10 +28,9 @@ public class GlobalExceptionHandler {
 
     // IllegalArgumentException 발생 시 400 오류 반환
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException ex) {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", ex.getMessage());
-        return ResponseEntity.badRequest().body(response);      // HTTP 400 Bad Request
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
     // 데이터베이스 제약 조건 위반 (중복 회원가입 등)

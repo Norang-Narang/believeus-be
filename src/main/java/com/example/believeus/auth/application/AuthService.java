@@ -18,6 +18,11 @@ public class AuthService {
 
     @Transactional
     public RegisterResponseDTO registerUser(RegisterRequestDTO request) {
+        // 중복 가입 방지
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new IllegalArgumentException("이미 가입된 아이디입니다.");
+        }
+
         User user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
