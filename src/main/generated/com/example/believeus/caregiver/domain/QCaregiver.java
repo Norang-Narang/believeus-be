@@ -18,6 +18,8 @@ public class QCaregiver extends EntityPathBase<Caregiver> {
 
     private static final long serialVersionUID = -52957263L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QCaregiver caregiver = new QCaregiver("caregiver");
 
     public final ListPath<CaregiverCertificate, QCaregiverCertificate> certificates = this.<CaregiverCertificate, QCaregiverCertificate>createList("certificates", CaregiverCertificate.class, QCaregiverCertificate.class, PathInits.DIRECT2);
@@ -36,24 +38,31 @@ public class QCaregiver extends EntityPathBase<Caregiver> {
 
     public final StringPath name = createString("name");
 
-    public final StringPath password = createString("password");
-
     public final StringPath phoneNumber = createString("phoneNumber");
 
     public final StringPath profileImageUrl = createString("profileImageUrl");
 
-    public final StringPath username = createString("username");
+    public final com.example.believeus.auth.domain.QUser user;
 
     public QCaregiver(String variable) {
-        super(Caregiver.class, forVariable(variable));
+        this(Caregiver.class, forVariable(variable), INITS);
     }
 
     public QCaregiver(Path<? extends Caregiver> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QCaregiver(PathMetadata metadata) {
-        super(Caregiver.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QCaregiver(PathMetadata metadata, PathInits inits) {
+        this(Caregiver.class, metadata, inits);
+    }
+
+    public QCaregiver(Class<? extends Caregiver> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.user = inits.isInitialized("user") ? new com.example.believeus.auth.domain.QUser(forProperty("user")) : null;
     }
 
 }

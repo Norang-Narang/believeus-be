@@ -1,11 +1,12 @@
 package com.example.believeus.auth.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 @AllArgsConstructor
-public class LoginResponse {
+public class LoginResponseDTO {
     private String accessToken;
     private String refreshToken;
+    private String role;
 }

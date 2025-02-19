@@ -39,7 +39,8 @@ public class SecurityConfig {
                                 "/h2-console/**",
                                 "/api/v1/auth/**",
                                 "/api/v1/admin/**",
-                                "/api/v1/caregivers/**",
+                                "/api/v1/register/**",
+                                "/api/v1/caregiver/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html"

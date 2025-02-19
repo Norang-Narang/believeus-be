@@ -48,7 +48,7 @@ public class QCaregiverCertificate extends EntityPathBase<CaregiverCertificate> 
 
     public QCaregiverCertificate(Class<? extends CaregiverCertificate> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.caregiver = inits.isInitialized("caregiver") ? new QCaregiver(forProperty("caregiver")) : null;
+        this.caregiver = inits.isInitialized("caregiver") ? new QCaregiver(forProperty("caregiver"), inits.get("caregiver")) : null;
     }
 
 }
