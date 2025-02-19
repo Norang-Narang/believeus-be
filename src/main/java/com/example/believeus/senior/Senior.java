@@ -35,6 +35,7 @@ public class Senior {
         FIFTH, // 5등급
         COGNITIVE_SUPPORT // 인지지원등급
     }
+    @Comment("노인 나이") private int age;
     @Comment("장기요양등급") private CareGrade careGrade;
     @Comment("주소") private String address;
 
@@ -49,10 +50,11 @@ public class Senior {
     private Admin admin;
 
     @Builder
-    public Senior(String name, LocalDate birthDate, Gender gender, CareGrade careGrade, String address, String careNeeds, Admin admin) {
+    public Senior(String name, LocalDate birthDate, Gender gender, int age, CareGrade careGrade, String address, String careNeeds, Admin admin) {
         this.name = name;
         this.birthDate = birthDate;
         this.gender = gender;
+        this.age = age;
         this.careGrade = careGrade;
         this.address = address;
         this.careNeeds = careNeeds;
