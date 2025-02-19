@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +52,7 @@ public class AdminService {
         adminRepository.save(admin);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public ResponseEntity<List<SeniorListResponse>> seniors() {
         List<Senior> seniors = seniorRepository.findAll();
 
@@ -66,4 +67,18 @@ public class AdminService {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public ResponseEntity<SeniorListResponse> senior(Long seniorId) {
+        Senior senior = seniorRepository.findById(seniorId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 어르신입니다"));
+
+        SeniorListResponse response = SeniorListResponse
+                .builder()
+                .name(senior.getName())
+                .age(senior.getAge() + "세")
+                .gender(senior.getGender() == Senior.Gender.MALE ? "남" : "여")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
