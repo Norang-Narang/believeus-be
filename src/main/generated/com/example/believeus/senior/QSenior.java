@@ -26,6 +26,8 @@ public class QSenior extends EntityPathBase<Senior> {
 
     public final com.example.believeus.admin.domain.QAdmin admin;
 
+    public final NumberPath<Integer> age = createNumber("age", Integer.class);
+
     public final DatePath<java.time.LocalDate> birthDate = createDate("birthDate", java.time.LocalDate.class);
 
     public final EnumPath<Senior.CareGrade> careGrade = createEnum("careGrade", Senior.CareGrade.class);
@@ -36,9 +38,13 @@ public class QSenior extends EntityPathBase<Senior> {
 
     public final EnumPath<Senior.Gender> gender = createEnum("gender", Senior.Gender.class);
 
+    public final NumberPath<Integer> height = createNumber("height", Integer.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath name = createString("name");
+
+    public final NumberPath<Integer> weight = createNumber("weight", Integer.class);
 
     public QSenior(String variable) {
         this(Senior.class, forVariable(variable), INITS);
