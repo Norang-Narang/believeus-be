@@ -11,20 +11,32 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AccountStatus status;
 
     @Builder
     public User(String username, String password, Role role) {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.status = AccountStatus.PENDING;
     }
 
     public void updateRole(Role role) {
         this.role = role;
+    }
+
+    public void completeRegistration() {
+        this.status = AccountStatus.COMPLETED;
     }
 }

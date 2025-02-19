@@ -7,4 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class RegisterResponseDTO {
     private Long userId;
+    private String username;
 }

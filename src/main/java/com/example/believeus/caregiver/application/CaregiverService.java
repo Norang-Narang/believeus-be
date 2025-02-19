@@ -28,6 +28,7 @@ public class CaregiverService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
         user.updateRole(Role.ROLE_CAREGIVER);
+        user.completeRegistration();
         userRepository.save(user);
         userRepository.flush();
 

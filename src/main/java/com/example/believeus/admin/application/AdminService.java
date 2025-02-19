@@ -23,6 +23,7 @@ public class AdminService {
 
         // 역할 업데이트
         user.updateRole(Role.ROLE_ADMIN);
+        user.completeRegistration();
         userRepository.save(user);
 
         Admin admin = Admin.createAdmin(
