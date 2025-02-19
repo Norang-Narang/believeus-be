@@ -60,7 +60,7 @@ public class AdminService {
                 .map(senior -> SeniorListResponse.builder()
                         .name(senior.getName())
                         .age(senior.getAge() + "세")
-                        .gender(senior.getGender().toString().equals("MALE") ? "남" : "여")
+                        .gender(senior.getGender() == Senior.Gender.MALE ? "남" : "여")
                         .build()).collect(Collectors.toList());
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
