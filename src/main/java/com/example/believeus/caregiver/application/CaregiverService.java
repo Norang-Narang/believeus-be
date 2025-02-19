@@ -1,82 +1,65 @@
 package com.example.believeus.caregiver.application;
 
+import com.example.believeus.auth.domain.Role;
+import com.example.believeus.auth.domain.User;
+import com.example.believeus.auth.repository.UserRepository;
 import com.example.believeus.caregiver.domain.Caregiver;
 import com.example.believeus.caregiver.domain.CaregiverCertificate;
-import com.example.believeus.caregiver.dto.CaregiverSignupRequest;
+import com.example.believeus.caregiver.dto.CaregiverDetailsRequestDTO;
 import com.example.believeus.caregiver.repository.CaregiverCertificateRepository;
 import com.example.believeus.caregiver.repository.CaregiverRepository;
-import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CaregiverService {
-
     private final CaregiverRepository caregiverRepository;
-    private final CaregiverCertificateRepository caregiverCertificateRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final CaregiverCertificateRepository certificateRepository;
+    private final UserRepository userRepository;
 
-    public void signUp(@Valid CaregiverSignupRequest request) {
-        validateRequest(request);       // 검증 로직 먼저 실행
+    public void registerCaregiverDetails(CaregiverDetailsRequestDTO request) {
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-        saveCaregiverWithCertificates(request);     // DB 저장 로직 별도 메서드에서 실행
-    }
+        user.updateRole(Role.ROLE_CAREGIVER);
+        userRepository.save(user);
+        userRepository.flush();
 
-    private void validateRequest(CaregiverSignupRequest request) {
-        // 필수 필드 검증
-        if (request.getUsername() == null || request.getUsername().isBlank()) {
-            throw new IllegalArgumentException("아이디는 필수 입력 항목입니다.");
-        }
-        if (request.getPassword() == null || request.getPassword().isBlank()) {
-            throw new IllegalArgumentException("비밀번호는 필수 입력 항목입니다.");
-        }
-        if (!request.getPassword().equals(request.getPasswordConfirm())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-        if (request.getName() == null || request.getName().isBlank()) {
-            throw new IllegalArgumentException("이름은 필수 입력 항목입니다.");
-        }
-        if (request.getPhoneNumber() == null || request.getPhoneNumber().isBlank()) {
-            throw new IllegalArgumentException("전화번호는 필수 입력 항목입니다.");
-        }
-
-        if (caregiverRepository.existsByUsername(request.getUsername())) {
-            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
-        }
-    }
-
-    @Transactional
-    public void saveCaregiverWithCertificates(CaregiverSignupRequest request) {
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
-
-        Caregiver caregiver = Caregiver.builder()
-                .username(request.getUsername())
-                .password(encodedPassword)
-                .name(request.getName())
-                .phoneNumber(request.getPhoneNumber())
-                .hasVehicle(request.isHasVehicle())
-                .hasDementiaTraining(request.isHasDementiaTraining())
-                .experienceYears(request.getExperienceYears())
-                .majorExperience(request.getMajorExperience())
-                .introduction(request.getIntroduction())
-                .profileImageUrl(request.getProfileImageUrl())
-                .build();
-
+        Caregiver caregiver = Caregiver.createCaregiver(
+                user,
+                request.getName(),
+                request.getPhoneNumber(),
+                request.isHasVehicle(),
+                request.isHasDementiaTraining(),
+                request.getExperienceYears(),
+                request.getMajorExperience(),
+                request.getIntroduction(),
+                request.getProfileImageUrl()
+        );
         caregiverRepository.save(caregiver);
+        caregiverRepository.flush();
 
-        // 자격증 정보 저장
-        for (CaregiverSignupRequest.CertificateRequest certRequest : request.getCertificates()) {
-            CaregiverCertificate certificate = CaregiverCertificate.builder()
-                    .certificateType(certRequest.getCertificateType())
-                    .certificateNumber(certRequest.getCertificateNumber())
-                    .build();
+        // 자격증 저장
+        if (request.getCertificates() != null && !request.getCertificates().isEmpty()) {
+            List<CaregiverCertificate> certificates = request.getCertificates().stream()
+                    .filter(cert -> cert.getType() != null && cert.getNumber() != null)
+                    .map(cert -> CaregiverCertificate.builder()
+                            .caregiver(caregiver)
+                            .certificateType(cert.getType())
+                            .certificateNumber(cert.getNumber())
+                            .build())
+                    .collect(Collectors.toList());
 
-            // 자격증과 요양보호사 연관 설정
-            caregiver.addCertificate(certificate);
-            caregiverCertificateRepository.save(certificate);
+            if (!certificates.isEmpty()) {
+                certificateRepository.saveAll(certificates);
+                certificateRepository.flush();
+            }
         }
     }
 }

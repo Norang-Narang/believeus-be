@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -16,6 +17,8 @@ import com.querydsl.core.types.Path;
 public class QAdmin extends EntityPathBase<Admin> {
 
     private static final long serialVersionUID = 845346065L;
+
+    private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QAdmin admin = new QAdmin("admin");
 
@@ -35,24 +38,31 @@ public class QAdmin extends EntityPathBase<Admin> {
 
     public final StringPath operatingPeriod = createString("operatingPeriod");
 
-    public final StringPath password = createString("password");
-
     public final StringPath phoneNumber = createString("phoneNumber");
 
     public final StringPath profileImageUrl = createString("profileImageUrl");
 
-    public final StringPath username = createString("username");
+    public final com.example.believeus.auth.domain.QUser user;
 
     public QAdmin(String variable) {
-        super(Admin.class, forVariable(variable));
+        this(Admin.class, forVariable(variable), INITS);
     }
 
     public QAdmin(Path<? extends Admin> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QAdmin(PathMetadata metadata) {
-        super(Admin.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QAdmin(PathMetadata metadata, PathInits inits) {
+        this(Admin.class, metadata, inits);
+    }
+
+    public QAdmin(Class<? extends Admin> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.user = inits.isInitialized("user") ? new com.example.believeus.auth.domain.QUser(forProperty("user")) : null;
     }
 
 }

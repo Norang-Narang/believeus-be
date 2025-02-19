@@ -58,7 +58,7 @@ public class QSenior extends EntityPathBase<Senior> {
 
     public QSenior(Class<? extends Senior> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.admin = inits.isInitialized("admin") ? new com.example.believeus.admin.domain.QAdmin(forProperty("admin")) : null;
+        this.admin = inits.isInitialized("admin") ? new com.example.believeus.admin.domain.QAdmin(forProperty("admin"), inits.get("admin")) : null;
     }
 
 }
