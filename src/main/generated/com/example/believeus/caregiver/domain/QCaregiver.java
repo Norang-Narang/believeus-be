@@ -34,6 +34,8 @@ public class QCaregiver extends EntityPathBase<Caregiver> {
 
     public final StringPath introduction = createString("introduction");
 
+    public final ListPath<com.example.believeus.util.Location, com.example.believeus.util.QLocation> locations = this.<com.example.believeus.util.Location, com.example.believeus.util.QLocation>createList("locations", com.example.believeus.util.Location.class, com.example.believeus.util.QLocation.class, PathInits.DIRECT2);
+
     public final StringPath majorExperience = createString("majorExperience");
 
     public final StringPath name = createString("name");

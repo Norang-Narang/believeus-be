@@ -26,7 +26,7 @@ public class SeniorService {
                 .birthDate(request.getBirthDate())
                 .gender(request.getGender())
                 .careGrade(request.getCareGrade())
-                .address(request.getAddress())
+                .location(request.getLocation())
                 .careNeeds(request.getCareNeeds())
                 .admin(admin)
                 .build();

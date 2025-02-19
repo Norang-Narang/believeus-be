@@ -1,5 +1,6 @@
 package com.example.believeus.caregiver.dto;
 
+import com.example.believeus.util.Location;
 import lombok.Data;
 import java.util.List;
 
@@ -15,5 +16,6 @@ public class CaregiverDetailsRequestDTO {
     private String introduction;
     private String profileImageUrl;
 
+    private List<Location> locations;
     private List<CertificateRequest> certificates;
 }

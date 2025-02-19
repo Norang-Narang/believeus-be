@@ -22,8 +22,6 @@ public class QSenior extends EntityPathBase<Senior> {
 
     public static final QSenior senior = new QSenior("senior");
 
-    public final StringPath address = createString("address");
-
     public final com.example.believeus.admin.domain.QAdmin admin;
 
     public final DatePath<java.time.LocalDate> birthDate = createDate("birthDate", java.time.LocalDate.class);
@@ -38,7 +36,13 @@ public class QSenior extends EntityPathBase<Senior> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final com.example.believeus.util.QLocation location;
+
     public final StringPath name = createString("name");
+
+    public final ListPath<String, StringPath> requestedTime = this.<String, StringPath>createList("requestedTime", String.class, StringPath.class, PathInits.DIRECT2);
+
+    public final ListPath<String, StringPath> requiredCareSkills = this.<String, StringPath>createList("requiredCareSkills", String.class, StringPath.class, PathInits.DIRECT2);
 
     public QSenior(String variable) {
         this(Senior.class, forVariable(variable), INITS);
@@ -59,6 +63,7 @@ public class QSenior extends EntityPathBase<Senior> {
     public QSenior(Class<? extends Senior> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.admin = inits.isInitialized("admin") ? new com.example.believeus.admin.domain.QAdmin(forProperty("admin"), inits.get("admin")) : null;
+        this.location = inits.isInitialized("location") ? new com.example.believeus.util.QLocation(forProperty("location")) : null;
     }
 
 }

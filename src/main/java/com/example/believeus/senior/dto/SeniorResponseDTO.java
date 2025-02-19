@@ -26,8 +26,7 @@ public class SeniorResponseDTO {
                 .birthDate(senior.getBirthDate())
                 .gender(senior.getGender().name())
                 .careGrade(senior.getCareGrade().name())
-                .address(senior.getAddress())
-                .careNeeds(senior.getCareNeeds())
+                .careNeeds(senior.getRequiredCareSkills().toString())
                 .createdAt(senior.getCreatedAt())
                 .adminId(senior.getAdmin().getId())
                 .build();

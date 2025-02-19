@@ -41,7 +41,8 @@ public class CaregiverService {
                 request.getExperienceYears(),
                 request.getMajorExperience(),
                 request.getIntroduction(),
-                request.getProfileImageUrl()
+                request.getProfileImageUrl(),
+                request.getLocations()
         );
         caregiverRepository.save(caregiver);
         caregiverRepository.flush();
