@@ -27,6 +27,8 @@ public class SeniorService {
                 .gender(request.getGender())
                 .careGrade(request.getCareGrade())
                 .address(request.getAddress())
+                .height(request.getHeight())
+                .weight(request.getWeight())
                 .careNeeds(request.getCareNeeds())
                 .admin(admin)
                 .build();

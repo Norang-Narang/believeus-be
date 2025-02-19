@@ -7,7 +7,10 @@ import com.example.believeus.admin.repository.AdminRepository;
 import com.example.believeus.auth.domain.Role;
 import com.example.believeus.auth.domain.User;
 import com.example.believeus.auth.repository.UserRepository;
+import com.example.believeus.caregiver.domain.Caregiver;
+import com.example.believeus.caregiver.repository.CaregiverRepository;
 import com.example.believeus.senior.Senior;
+import com.example.believeus.senior.dto.SeniorUpdateRequest;
 import com.example.believeus.senior.repository.SeniorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,7 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -25,6 +30,7 @@ public class AdminService {
     private final AdminRepository adminRepository;
     private final UserRepository userRepository;
     private final SeniorRepository seniorRepository;
+    private final CaregiverRepository caregiverRepository;
 
     @Transactional
     public void registerAdminDetails(AdminDetailsRequestDTO request) {
@@ -80,5 +86,35 @@ public class AdminService {
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> update(Long seniorId, SeniorUpdateRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        Senior senior = seniorRepository.findById(seniorId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 어르신입니다"));
+        senior.update(
+                request.name(),
+                request.age(),
+                request.birthDate(),
+                request.address(),
+                request.height(),
+                request.weight(),
+                request.grade(),
+                request.careNeeds()
+        );
+        seniorRepository.save(senior);
+        response.put("message", "성공적으로 어르신 정보가 수정되었습니다");
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // TODO : 아직 완성 안됨
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public ResponseEntity<?> caregiver(Long caregiverId) {
+        Caregiver caregiver = caregiverRepository.findById(caregiverId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 요양보호사입니다"));
+
+        return null;
     }
 }

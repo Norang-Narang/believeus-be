@@ -36,6 +36,8 @@ public class Senior {
         COGNITIVE_SUPPORT // 인지지원등급
     }
     @Comment("노인 나이") private int age;
+    @Comment("노인 키") private int height;
+    @Comment("노인 몸무게") private int weight;
     @Comment("장기요양등급") private CareGrade careGrade;
     @Comment("주소") private String address;
 
@@ -50,14 +52,28 @@ public class Senior {
     private Admin admin;
 
     @Builder
-    public Senior(String name, LocalDate birthDate, Gender gender, int age, CareGrade careGrade, String address, String careNeeds, Admin admin) {
+    public Senior(String name, LocalDate birthDate, Gender gender, int age, int height, int weight, CareGrade careGrade, String address, String careNeeds, LocalDate createdAt, Admin admin) {
         this.name = name;
         this.birthDate = birthDate;
         this.gender = gender;
         this.age = age;
+        this.height = height;
+        this.weight = weight;
         this.careGrade = careGrade;
         this.address = address;
         this.careNeeds = careNeeds;
+        this.createdAt = createdAt;
         this.admin = admin;
+    }
+
+    public void update(String name, int age, LocalDate birthDate, String address, int height, int weight, CareGrade careGrade, String careNeeds) {
+        this.name = name;
+        this.age = age;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.height = height;
+        this.weight = weight;
+        this.careGrade = careGrade;
+        this.careNeeds = careNeeds;
     }
 }
